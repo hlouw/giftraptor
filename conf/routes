@@ -4,7 +4,7 @@
 
 # Home page
 GET     /                           controllers.Application.index
-GET     /user                       controllers.Application.profile
+GET     /user/:user                 controllers.Application.profile(user: String)
 GET     /admin                      controllers.Application.admin
 
 # Map static resources from the /public folder to the /assets URL path
