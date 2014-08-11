@@ -3,11 +3,15 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Application.index
-GET     /user/:user                 controllers.Application.profile(user: String)
-GET     /admin                      controllers.Application.admin
+GET        /                            controllers.Application.index
+GET        /user/:user                  controllers.Application.profile(user: String)
+GET        /admin                       controllers.Application.admin
 
+# Services
+POST       /santa/create                controllers.SantaController.create
+GET        /santa/findById/:id          controllers.SantaController.findById(id: Int)
+GET        /santa/findByMember/:id      controllers.SantaController.findByMember(id: Int)
 
 # Webjars, requirejs, routes and other assets
-GET     /webjars/*file         controllers.WebJarAssets.at(file)
-GET     /assets/*file          controllers.Assets.at(path="/public", file)
+GET        /webjars/*file               controllers.WebJarAssets.at(file)
+GET        /assets/*file                controllers.Assets.at(path="/public", file)
