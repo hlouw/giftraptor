@@ -8,9 +8,10 @@ GET        /user/:user                  controllers.Application.profile(user: St
 GET        /admin                       controllers.Application.admin
 
 # Services
-POST       /santa/create                controllers.SantaController.create
-GET        /santa/findById/:id          controllers.SantaController.findById(id: Int)
+POST       /santa                       controllers.SantaController.create
+GET        /santa/:id                   controllers.SantaController.findById(id: Int)
 GET        /santa/findByMember/:id      controllers.SantaController.findByMember(id: Int)
+POST       /santa/:id/generate          controllers.SantaController.generate(id: Int)
 
 # Webjars, requirejs, routes and other assets
 GET        /webjars/*file               controllers.WebJarAssets.at(file)
