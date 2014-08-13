@@ -1,11 +1,10 @@
-package controllers.services.santagraph
+package controllers.santagraph
 
-import akka.actor.{Props, Actor, ActorLogging}
-import controllers.services.santagraph.SantaGraph.{Solution, Graph}
+import akka.actor.{Actor, ActorLogging, Props}
+import SantaGraph.{Graph, Solution}
 import models.Models.UserId
 
 class Node(graph: Graph, goal: UserId) extends Actor with ActorLogging {
-  import controllers.services.santagraph.Node._
   import context._
 
   override def receive: Receive = {

@@ -1,13 +1,12 @@
-package controllers.services.santagraph
+package controllers.santagraph
 
 import akka.actor._
 import models.Models.UserId
 
 
 class SantaGraph extends Actor with ActorLogging {
-  import controllers.services.santagraph.SantaGraph._
-  import controllers.services.santagraph.Node._
   import context._
+  import controllers.santagraph.Node._
 
   var originalSender: Option[ActorRef] = None
 
