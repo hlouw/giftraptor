@@ -3,9 +3,9 @@ package controllers
 import akka.actor.Props
 import akka.pattern.ask
 import akka.util.Timeout
+import controllers.services.santagraph.SantaGraph
 import scala.concurrent.duration._
-import controllers.services.PathRoot.FindSolution
-import controllers.services.{PathRoot, SantaPath}
+import controllers.services.santagraph.SantaGraph.FindSolution
 import models.Models._
 import models.SecretSanta
 import play.api.libs.json.Json
@@ -51,8 +51,8 @@ object SantaController extends Controller with MongoController {
 
     implicit val timeout = Timeout(5 seconds)
 
-    val actor = Akka.system.actorOf(Props[PathRoot], id.toString)
-    val futurePath = ask(actor,  FindSolution(graph, goal)).mapTo[List[UserId]]
+    val graphActor = Akka.system.actorOf(Props[SantaGraph], name = s"SantaGraph$id")
+    val futurePath = ask(graphActor, FindSolution(graph, goal)).mapTo[List[UserId]]
     futurePath.map(path => Ok(path.toString))
   }
 
