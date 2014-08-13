@@ -6,6 +6,7 @@ import models.Models.UserId
 
 class Node(graph: Graph, goal: UserId) extends Actor with ActorLogging {
   import context._
+  import controllers.santagraph.Node._
 
   override def receive: Receive = {
     case Explore(path) if isSolution(path) =>

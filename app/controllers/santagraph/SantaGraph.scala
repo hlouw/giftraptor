@@ -7,6 +7,7 @@ import models.Models.UserId
 class SantaGraph extends Actor with ActorLogging {
   import context._
   import controllers.santagraph.Node._
+  import controllers.santagraph.SantaGraph._
 
   var originalSender: Option[ActorRef] = None
 
