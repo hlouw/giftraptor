@@ -1,21 +1,15 @@
 package controllers
 
-import akka.actor.Props
-import akka.pattern.ask
-import akka.util.Timeout
-import controllers.santagraph.SantaGraph
-import scala.concurrent.duration._
-import SantaGraph.FindSolution
+import controllers.santa.SantaPath
 import models.Models._
 import models.SecretSanta
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
 import play.api.mvc._
 import play.modules.reactivemongo.MongoController
 import play.modules.reactivemongo.json.collection.JSONCollection
 
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import play.api.libs.concurrent.Akka
-import play.api.Play.current
+import scala.concurrent._
 
 object SantaController extends Controller with MongoController {
 
@@ -39,6 +33,12 @@ object SantaController extends Controller with MongoController {
     futureSantas.map(santa => Ok(santa.toString))
   }
 
+  /**
+   * Generate a valid sequence of gift-giving for the given Secret Santa event.
+   *
+   * @param id Identifier for the event.
+   * @return
+   */
   def generate(id: SantaId) = Action.async {
     val graph = Map[UserId, Set[UserId]](
       1 -> Set(2, 3, 4, 5),
@@ -49,11 +49,12 @@ object SantaController extends Controller with MongoController {
     )
     val goal = 1
 
-    implicit val timeout = Timeout(5 seconds)
-
-    val graphActor = Akka.system.actorOf(Props[SantaGraph], name = s"SantaGraph$id")
-    val futurePath = ask(graphActor, FindSolution(graph, goal)).mapTo[List[UserId]]
-    futurePath.map(path => Ok(path.toString))
+    val sp = new SantaPath(graph)
+    Future {
+      sp.solve(goal)
+    } map {
+      paths => Ok(paths.toString)
+    }
   }
 
 }
