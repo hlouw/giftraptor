@@ -10,6 +10,7 @@ import play.modules.reactivemongo.MongoController
 import play.modules.reactivemongo.json.collection.JSONCollection
 
 import scala.concurrent.Future
+import scala.util.Random
 
 object SantaController extends Controller with MongoController {
 
@@ -49,7 +50,8 @@ object SantaController extends Controller with MongoController {
       sp = new SantaPath(graph)
       goal = graph.keys.head
       solution <- sp.solve(goal)
-    } yield solution
+      chosen = solution.toList(Random.nextInt(solution.size))
+    } yield chosen
 
     f map { solution =>
       Ok(solution.toString)
