@@ -9,7 +9,7 @@ import play.api.mvc._
 import play.modules.reactivemongo.MongoController
 import play.modules.reactivemongo.json.collection.JSONCollection
 
-import scala.concurrent._
+import scala.concurrent.Future
 
 object SantaController extends Controller with MongoController {
 
@@ -23,7 +23,7 @@ object SantaController extends Controller with MongoController {
   def findById(id: SantaId) = Action.async {
     val futureSantas = secretsantas.find(Json.obj("_id" -> id)).cursor[SecretSanta].collect[List]()
 
-    futureSantas.map(santa => Ok(santa.toString))
+    futureSantas.map(santa => Ok(santa.map(_.toGraphMap()).toString))
   }
 
   def findByMember(id: UserId) = Action.async {
@@ -40,20 +40,19 @@ object SantaController extends Controller with MongoController {
    * @return
    */
   def generate(id: SantaId) = Action.async {
-    val graph = Map[UserId, Set[UserId]](
-      1 -> Set(2, 3, 4, 5),
-      2 -> Set(1, 3, 4, 5),
-      3 -> Set(1, 2, 4, 5),
-      4 -> Set(1, 2, 3, 5),
-      5 -> Set(1, 2, 3, 4)
-    )
-    val goal = 1
+    val futureSanta = secretsantas.find(Json.obj("_id" -> id)).one[SecretSanta]
 
-    val sp = new SantaPath(graph)
-    Future {
-      sp.solve(goal)
-    } map {
-      paths => Ok(paths.toString)
+    val f = for {
+      santa <- futureSanta
+      s = santa.get
+      graph = s.toGraphMap
+      sp = new SantaPath(graph)
+      goal = graph.keys.head
+      solution <- sp.solve(goal)
+    } yield solution
+
+    f map { solution =>
+      Ok(solution.toString)
     }
   }
 

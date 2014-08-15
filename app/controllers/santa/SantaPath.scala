@@ -1,6 +1,10 @@
 package controllers.santa
 
 import models.Models.UserId
+import play.api.Logger
+import scala.concurrent.Future
+
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
 /**
  * Find a Secret Santa path using the power of recursion.
@@ -23,15 +27,16 @@ class SantaPath(graph: Map[UserId, Set[UserId]]) {
       graph(path.head) flatMap { link =>
         explore(link :: path, goal)
       }
-
-    def isSolution(path: List[UserId], goal: UserId): Boolean =
-      path.nonEmpty && (path.head == goal) && graph.keys.forall(path.tail.contains(_))
-
-    def isCycle(path: List[UserId]): Boolean =
-      (path.size > 1) && (path.distinct.size < path.size)
-
   }
 
-  def solve(goal: UserId) = explore(List(goal), goal)
+  private def isSolution(path: List[UserId], goal: UserId): Boolean =
+    path.nonEmpty && (path.head == goal) && graph.keys.forall(path.tail.contains(_))
+
+  private def isCycle(path: List[UserId]): Boolean =
+    (path.size > 1) && (path.distinct.size < path.size)
+
+  def solve(goal: UserId) = Future {
+    explore(List(goal), goal)
+  }
 
 }
