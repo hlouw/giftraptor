@@ -1,7 +1,6 @@
 package models
 
-import models.Models.UserId
-import models.Models.SantaId
+import models.Models._
 
 case class User(
   _id: UserId,
@@ -12,9 +11,13 @@ case class SecretSanta(
   name: String,
   graph: Seq[SantaLink]) {
 
-  def toGraphMap() = {
+  def toGraphMap(): Graph = {
     val z = graph.map(_.from) zip graph.map(_.to.toSet)
-    z.toMap[Int, Set[Int]]
+    z.toMap[UserId, Set[UserId]]
+  }
+
+  def members(): Set[UserId] = {
+    graph.map(_.from).toSet[UserId]
   }
 }
 
@@ -25,6 +28,8 @@ object Models {
 
   type UserId = Int
   type SantaId = Int
+  type Graph = Map[UserId, Set[UserId]]
+  type Path = List[UserId]
 
   implicit val userFormat = Json.format[User]
   implicit val santaLinkFormat = Json.format[SantaLink]
