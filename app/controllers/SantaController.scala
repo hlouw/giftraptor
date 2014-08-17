@@ -1,6 +1,6 @@
 package controllers
 
-import controllers.santa.SantaPath
+import controllers.santa.SantaSolver
 import models.Models._
 import models.{User, SecretSanta}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
@@ -29,13 +29,6 @@ object SantaController extends Controller with MongoController {
     futureSantas.map(santa => Ok(santa.map(_.toGraphMap()).toString))
   }
 
-  def findByMember(id: UserId) = Action.async {
-    val query = Json.obj("graph.from" -> id)
-    val futureSantas = secretsantas.find(query).cursor[SecretSanta].collect[List]()
-
-    futureSantas.map(santa => Ok(santa.toString))
-  }
-
   /**
    * Generate and persist a valid sequence of gift-giving for the given Secret Santa event.
    * Skip if a sequence already exists in DB.
@@ -50,7 +43,7 @@ object SantaController extends Controller with MongoController {
     val giftseq: Future[Option[List[UserId]]] = futureSanta flatMap {
       case Some(santa) =>
         val graph = santa.toGraphMap()
-        val solver = new SantaPath(graph)
+        val solver = new SantaSolver(graph)
         val goal = graph.keys.head
         solver.solve(goal) map { solutions =>
           Some(solutions.toList(Random.nextInt(solutions.size)))

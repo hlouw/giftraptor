@@ -9,7 +9,7 @@ import play.api.libs.concurrent.Execution.Implicits.defaultContext
 /**
  * Find a Secret Santa path using the power of recursion.
  */
-class SantaPath(graph: Map[UserId, Set[UserId]]) {
+class SantaSolver(graph: Map[UserId, Set[UserId]]) {
 
   /**
    * Recursively explore all paths in the graph.

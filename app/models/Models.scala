@@ -9,6 +9,7 @@ case class User(
 case class SecretSanta(
   _id: SantaId,
   name: String,
+  description: String,
   graph: Seq[SantaLink]) {
 
   def toGraphMap(): Graph = {

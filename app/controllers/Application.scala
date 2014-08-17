@@ -1,5 +1,6 @@
 package controllers
 
+import models.SecretSanta
 import play.api.mvc._
 
 object Application extends Controller {
@@ -8,12 +9,6 @@ object Application extends Controller {
     Ok(views.html.index())
   }
 
-  def profile(user: String) = Action {
-    Ok(views.html.profile())
-  }
-
-  def admin = Action {
-    Ok(views.html.admin())
-  }
+  def admin = TODO
 
 }
