@@ -2,7 +2,7 @@ package controllers
 
 import controllers.santa.SantaSolver
 import models.Models._
-import models.{User, SecretSanta}
+import models.{SantaLink, User, SecretSanta}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
 import play.api.mvc._
@@ -26,7 +26,9 @@ object SantaController extends Controller with MongoController {
   def findById(id: SantaId) = Action.async {
     val futureSantas = secretsantas.find(Json.obj("_id" -> id)).cursor[SecretSanta].collect[List]()
 
-    futureSantas.map(santa => Ok(santa.map(_.toGraphMap()).toString))
+    futureSantas.map { santa =>
+      Ok(santa.map(_.toGraphMap()).toString) as JSON
+    }
   }
 
   /**
@@ -64,14 +66,31 @@ object SantaController extends Controller with MongoController {
     }
   }
 
-  def getNamesFromDb(members: Set[UserId]): Future[Map[UserId, String]] = {
-    val query = Json.obj("_id" -> Json.obj("$in" -> members))
-    val futureMembers = users.find(query).cursor[User].collect[List]()
 
-    futureMembers map { members =>
-      val m = members.map(_._id) zip members.map(_.name)
-      m.toMap[UserId, String]
+  def addMember(santaId: SantaId, userId: UserId) = Action.async {
+    val selector = Json.obj("_id" -> santaId)
+    val futureSanta = secretsantas.find(selector).one[SecretSanta]
+
+    for {
+      optSanta <- futureSanta
+      if optSanta.isDefined
+      santa = optSanta.get
+    } {
+      val newSanta = addMemberToGraph(santa, userId)
+      secretsantas.update(selector, Json.obj("$set" -> Json.obj("graph" -> newSanta.graph)))
     }
+
+    Future(Ok)
+  }
+
+  private def addMemberToGraph(santa: SecretSanta, newMember: UserId): SecretSanta = {
+    val otherMembers = santa.members filter { _ != newMember }
+    val newLink = SantaLink(from = newMember, to = otherMembers)
+    val newGraph = santa.graph map { link =>
+      SantaLink(link.from, link.to + newMember)
+    }
+
+    santa.copy(graph = newLink +: newGraph)
   }
 
 }
