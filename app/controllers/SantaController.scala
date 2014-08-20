@@ -8,6 +8,7 @@ import play.api.libs.json.Json
 import play.api.mvc._
 import play.modules.reactivemongo.MongoController
 import play.modules.reactivemongo.json.collection.JSONCollection
+import reactivemongo.core.commands.LastError
 
 import scala.concurrent.Future
 import scala.util.Random
@@ -66,28 +67,61 @@ object SantaController extends Controller with MongoController {
     }
   }
 
-
   def addMember(santaId: SantaId, userId: UserId) = Action.async {
     val selector = Json.obj("_id" -> santaId)
     val futureSanta = secretsantas.find(selector).one[SecretSanta]
 
-    for {
+    val lastError: Future[LastError] = for {
       optSanta <- futureSanta
       if optSanta.isDefined
       santa = optSanta.get
-    } {
-      val newSanta = addMemberToGraph(santa, userId)
-      secretsantas.update(selector, Json.obj("$set" -> Json.obj("graph" -> newSanta.graph)))
+      newSanta = addMemberToGraph(santa, userId)
+      update = Json.obj("$set" -> Json.obj("graph" -> newSanta.graph))
+      lastError <- secretsantas.update(selector, update)
+    } yield lastError
+
+    lastError map { le =>
+      Ok(le.toString)
+    }
+  }
+
+  def declique(santaId: SantaId) = Action.async(BodyParsers.parse.json) { request =>
+    val members = request.body.validate[List[UserId]].get
+
+    val selector = Json.obj("_id" -> santaId)
+    val futureSanta = secretsantas.find(selector).one[SecretSanta]
+
+    val lastError = for {
+      optSanta <- futureSanta
+      if optSanta.isDefined
+      santa = optSanta.get
+      newSanta = decliqueMembers(santa, members)
+      update = Json.obj("$set" -> Json.obj("graph" -> newSanta.graph))
+      lastError <- secretsantas.update(selector, update)
+    } yield lastError
+
+    lastError map { le =>
+      Ok(le.toString)
+    }
+  }
+
+  def decliqueMembers(santa: SecretSanta, members: List[UserId]) = {
+    val newGraph = santa.graph map { link =>
+      if (members.contains(link.from))
+        link.copy(to = link.to filter {
+          !members.contains(_)
+        } )
+      else link
     }
 
-    Future(Ok)
+    santa.copy(graph = newGraph)
   }
 
   private def addMemberToGraph(santa: SecretSanta, newMember: UserId): SecretSanta = {
     val otherMembers = santa.members filter { _ != newMember }
     val newLink = SantaLink(from = newMember, to = otherMembers)
     val newGraph = santa.graph map { link =>
-      SantaLink(link.from, link.to + newMember)
+      link.copy(to = link.to + newMember)
     }
 
     santa.copy(graph = newLink +: newGraph)
