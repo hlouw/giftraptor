@@ -7,10 +7,10 @@ case class User(
   name: String)
 
 case class SecretSanta(
-  _id: SantaId,
+  _id: SantaId = 0,
   name: String,
   description: String,
-  graph: Seq[SantaLink]) {
+  graph: Seq[SantaLink] = Seq[SantaLink]()) {
 
   def toGraphMap(): Graph = {
     val z = graph.map(_.from) zip graph.map(_.to.toSet)

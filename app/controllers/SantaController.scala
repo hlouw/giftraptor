@@ -2,26 +2,35 @@ package controllers
 
 import controllers.santa.SantaSolver
 import models.Models._
-import models.{SantaLink, User, SecretSanta}
+import models.{SantaLink, SecretSanta}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
-import play.api.libs.json.Json
+import play.api.libs.json.{JsSuccess, JsError, Json}
 import play.api.mvc._
 import play.modules.reactivemongo.MongoController
 import play.modules.reactivemongo.json.collection.JSONCollection
-import reactivemongo.core.commands.LastError
 
 import scala.concurrent.Future
 import scala.util.Random
-import scala.util.{Success, Failure}
 
 object SantaController extends Controller with MongoController {
 
-  def secretsantas: JSONCollection = db.collection[JSONCollection]("secretsantas")
-  def users: JSONCollection = db.collection[JSONCollection]("users")
+  def secretsantas = db.collection[JSONCollection]("secretsantas")
+  def users = db.collection[JSONCollection]("users")
+  def counters = db.collection[JSONCollection]("counters")
 
-  def create = Action { request =>
+  /**
+   * Create a new Secret Santa occasion.
+   * @return
+   */
+  def create = Action(BodyParsers.parse.json) { request =>
+    val json = request.body
+    val name = (json \ "name").as[String]
+    val description = (json \ "description").as[String]
+    val santa = SecretSanta(name = name, description = description)
+
     val id = 1
-    Ok(s"SantaID created: $id")
+    val newSanta = santa.copy(_id = id)
+    Ok(s"Santa created: $newSanta")
   }
 
   def findById(id: SantaId) = Action.async {
@@ -71,7 +80,7 @@ object SantaController extends Controller with MongoController {
     val selector = Json.obj("_id" -> santaId)
     val futureSanta = secretsantas.find(selector).one[SecretSanta]
 
-    val lastError: Future[LastError] = for {
+    val lastError = for {
       optSanta <- futureSanta
       if optSanta.isDefined
       santa = optSanta.get
@@ -105,7 +114,7 @@ object SantaController extends Controller with MongoController {
     }
   }
 
-  def decliqueMembers(santa: SecretSanta, members: List[UserId]) = {
+  private def decliqueMembers(santa: SecretSanta, members: List[UserId]) = {
     val newGraph = santa.graph map { link =>
       if (members.contains(link.from))
         link.copy(to = link.to filter {
