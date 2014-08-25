@@ -3,14 +3,19 @@ package controllers
 import controllers.santa.SantaSolver
 import models.Models._
 import models.{SantaLink, SecretSanta}
+import play.api.Logger
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.{JsSuccess, JsError, Json}
 import play.api.mvc._
 import play.modules.reactivemongo.MongoController
 import play.modules.reactivemongo.json.collection.JSONCollection
 
+import reactivemongo.api._
+import reactivemongo.bson._
+import reactivemongo.core.commands._
+
 import scala.concurrent.Future
-import scala.util.Random
+import scala.util.{Random, Failure, Success}
 
 object SantaController extends Controller with MongoController {
 
@@ -19,20 +24,55 @@ object SantaController extends Controller with MongoController {
   def counters = db.collection[JSONCollection]("counters")
 
   /**
+   * Persist and return the next sequence number for the given sequence name.
+   *
+   * @param name Sequence name to tick over.
+   * @return Next sequence number.
+   */
+  def nextSeq(name: String): Future[Option[Int]] = {
+    val query = BSONDocument("_id" -> name)
+    val update = BSONDocument("$inc" -> BSONDocument("seq" -> BSONInteger(1)))
+
+    val command = FindAndModify(
+      collection = counters.name,
+      query = query,
+      modify = Update(update, true),
+      upsert = true)
+
+    db.command(command) map { maybeDoc =>
+      for {
+        doc <- maybeDoc
+        seq <- doc.getAs[Int]("seq")
+      } yield seq
+    }
+  }
+
+  /**
    * Create a new Secret Santa occasion.
    * @return
    */
-  def create = Action(BodyParsers.parse.json) { request =>
-    val json = request.body
-    val name = (json \ "name").as[String]
-    val description = (json \ "description").as[String]
-    val santa = SecretSanta(name = name, description = description)
+  def create = Action.async(BodyParsers.parse.json) { request =>
+    val futureId = nextSeq(secretsantas.name)
 
-    val id = 1
-    val newSanta = santa.copy(_id = id)
-    Ok(s"Santa created: $newSanta")
+    futureId flatMap {
+      case Some(seq) =>
+        val json = request.body
+        val name = (json \ "name").as[String]
+        val description = (json \ "description").as[String]
+        val santa = SecretSanta(_id = seq, name = name, description = description)
+        secretsantas.insert(santa) map { lastError =>
+          Ok(s"Santa created: $santa")
+        }
+      case None =>
+        Future(BadRequest(s"Santa not created"))
+    }
   }
 
+  /**
+   *
+   * @param id
+   * @return
+   */
   def findById(id: SantaId) = Action.async {
     val futureSantas = secretsantas.find(Json.obj("_id" -> id)).cursor[SecretSanta].collect[List]()
 
