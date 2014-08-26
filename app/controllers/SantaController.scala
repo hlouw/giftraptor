@@ -92,14 +92,11 @@ object SantaController extends Controller with MongoController {
     val selector = Json.obj("_id" -> id, "giftseq" -> Json.obj("$exists" -> false))
     val futureSanta = secretsantas.find(selector).one[SecretSanta]
 
-    val giftseq: Future[Option[List[UserId]]] = futureSanta flatMap {
+    val giftseq: Future[Option[Path]] = futureSanta flatMap {
       case Some(santa) =>
         val graph = santa.toGraphMap()
-        val solver = new SantaSolver(graph)
         val goal = graph.keys.head
-        solver.solve(goal) map { solutions =>
-          Some(solutions.toList(Random.nextInt(solutions.size)))
-        }
+        SantaSolver(graph).solve(goal)
 
       case None =>
         Future(None)
