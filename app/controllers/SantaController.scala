@@ -1,5 +1,6 @@
 package controllers
 
+import controllers.UserController._
 import controllers.santa.SantaSolver
 import models.Models._
 import models.{SantaLink, SecretSanta}
@@ -76,9 +77,23 @@ object SantaController extends Controller with MongoController {
   def findById(id: SantaId) = Action.async {
     val futureSantas = secretsantas.find(Json.obj("_id" -> id)).cursor[SecretSanta].collect[List]()
 
-    futureSantas.map { santa =>
+    futureSantas map { santa =>
       Ok(santa.map(_.toGraphMap()).toString) as JSON
     }
+  }
+
+  /**
+   * Find all santas for the given user.
+   *
+   * @param user
+   * @return
+   */
+  def findSantas(user: String) = Action.async {
+    val userId = 1
+    val query = Json.obj("graph.from" -> userId)
+    val futureSantas = secretsantas.find(query).cursor[SecretSanta].collect[List]()
+
+    futureSantas.map(santas => Ok(Json.toJson(santas)) as JSON)
   }
 
   /**

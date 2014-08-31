@@ -10,6 +10,7 @@ GET         /admin                              controllers.Application.admin
 # Services
 POST        /santa                              controllers.SantaController.create
 GET         /santa/:id                          controllers.SantaController.findById(id: Int)
+GET         /user/:user/santas                  controllers.SantaController.findSantas(user: String)
 PUT         /santa/:id/generate                 controllers.SantaController.generate(id: Int)
 PUT         /santa/:id/addmember/:userId        controllers.SantaController.addMember(id: Int, userId: Int)
 PUT         /santa/:id/declique                 controllers.SantaController.declique(id: Int)

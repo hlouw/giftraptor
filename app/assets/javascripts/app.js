@@ -9,8 +9,13 @@
 
     var app = angular.module('santaApp', []);
 
-    app.controller('SantaController', function() {
-        this.santas = santaList;
-    });
+    app.controller('ProfileController', ['$http', function($http) {
+        var profile = this;
+        profile.santas = [];
+
+        $http.get('http://localhost:9000/user/hlouw/santas').success(function(data) {
+            profile.santas = data;
+        });
+    }]);
 
 })();

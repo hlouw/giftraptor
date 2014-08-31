@@ -5,12 +5,13 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <h2>Welcome, @user.</h2>
+            <h2>Welcome, @user. </h2>
             <p>Do not be alarmed.</p>
         </div>
     </div>
-    <div class="row" ng-controller="SantaController as santaCtrl">
-        <div class="col-md-4" ng-repeat="santa in santaCtrl.santas">
+
+    <div class="row" ng-controller="ProfileController as profileCtrl">
+        <div class="col-md-4" ng-repeat="santa in profileCtrl.santas">
             <h2>{{santa.name}}</h2>
             <p>{{santa.description}}</p>
             <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
