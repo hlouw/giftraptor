@@ -15,5 +15,5 @@ libraryDependencies ++= Seq(
   // WebJars pull in client-side web libraries
   "org.webjars" %% "webjars-play" % "2.3.0",
   "org.webjars" % "bootstrap" % "3.2.0",
-  "org.webjars" % "knockout" % "3.1.0"
+  "org.webjars" % "angularjs" % "1.2.23"
 )
