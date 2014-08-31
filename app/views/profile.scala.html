@@ -1,6 +1,6 @@
-@(user: String, santas: List[SecretSanta])
+@(user: String)
 
-@main("User Profile", "santaApp") {
+@main("User Profile") {
 
 <div class="container">
     <div class="row">
@@ -14,9 +14,27 @@
         <div class="col-md-4" ng-repeat="santa in profileCtrl.santas">
             <h2>{{santa.name}}</h2>
             <p>{{santa.description}}</p>
-            <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+            <p><button class="btn btn-default" data-toggle="modal" data-target="#santaModal">View details &raquo;</button></p>
         </div>
     </div>
+
+    <div class="modal fade" id="santaModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">Modal title</h4>
+                </div>
+                <div class="modal-body">
+                    <p>One fine body&hellip;</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 </div>
 
 }

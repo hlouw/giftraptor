@@ -14,12 +14,8 @@ object UserController extends Controller with MongoController {
   def secretsantas: JSONCollection = db.collection[JSONCollection]("secretsantas")
   def users: JSONCollection = db.collection[JSONCollection]("users")
 
-  def findSantas(user: String) = Action.async {
-    val userId = 1
-    val query = Json.obj("graph.from" -> userId)
-    val futureSantas = secretsantas.find(query).cursor[SecretSanta].collect[List]()
-
-    futureSantas.map(santas => Ok(views.html.profile(user, santas)))
+  def viewProfile(user: String) = Action {
+    Ok(views.html.profile(user))
   }
 
   private def getNamesFromDb(members: Set[UserId]): Future[Map[UserId, String]] = {
