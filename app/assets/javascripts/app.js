@@ -5,7 +5,7 @@
         var profile = this;
         profile.santas = [];
 
-        $http.get('/user/hlouw/santas').success(function(data) {
+        $http.get('/santas').success(function(data) {
             profile.santas = data;
         });
     }]);

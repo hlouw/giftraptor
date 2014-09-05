@@ -5,12 +5,13 @@
 # Pages
 GET         /                                   controllers.Application.index
 GET         /user/:user                         controllers.UserController.viewProfile(user: String)
+GET         /secret/:key                        controllers.UserController.viewSecretProfile(key: String)
 GET         /admin                              controllers.Application.admin
 
 # Services
 POST        /santa                              controllers.SantaController.create
 GET         /santa/:id                          controllers.SantaController.findById(id: Int)
-GET         /user/:user/santas                  controllers.SantaController.findSantas(user: String)
+GET         /santas                             controllers.SantaController.findSantas
 PUT         /santa/:id/generate                 controllers.SantaController.generate(id: Int)
 PUT         /santa/:id/addmember/:userId        controllers.SantaController.addMember(id: Int, userId: Int)
 PUT         /santa/:id/declique                 controllers.SantaController.declique(id: Int)

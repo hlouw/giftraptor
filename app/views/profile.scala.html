@@ -2,16 +2,16 @@
 
 @main("User Profile") {
 
-<div class="container">
+<div id="user-profile" class="container">
     <div class="row">
-        <div class="col-md-12">
-            <h2>Welcome, @user. </h2>
+        <div class="page-header">
+            <h1>Welcome, @user</h1>
             <p>Do not be alarmed.</p>
         </div>
     </div>
 
     <div class="row" ng-controller="ProfileController as profileCtrl">
-        <div class="col-md-4" ng-repeat="santa in profileCtrl.santas">
+        <div class="col-md-4 santa-tile" ng-repeat="santa in profileCtrl.santas">
             <h2>{{santa.name}}</h2>
             <p>{{santa.description}}</p>
             <p><button class="btn btn-default" data-toggle="modal" data-target="#santaModal">View details &raquo;</button></p>

@@ -18,6 +18,19 @@ object UserController extends Controller with MongoController {
     Ok(views.html.profile(user))
   }
 
+  def viewSecretProfile(key: String) = Action.async {
+    val query = Json.obj("secret" -> key);
+    val futureUser = users.find(query).one[User]
+
+    for {
+      optUser <- futureUser
+      result = optUser match {
+        case Some(user) => Ok(views.html.profile(user.name)).withSession("secret" -> key)
+        case None => BadRequest(s"Invalid secret").withNewSession
+      }
+    } yield result
+  }
+
   private def getNamesFromDb(members: Set[UserId]): Future[Map[UserId, String]] = {
     val query = Json.obj("_id" -> Json.obj("$in" -> members))
     val futureMembers = users.find(query).cursor[User].collect[List]()

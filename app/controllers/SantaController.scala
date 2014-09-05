@@ -3,7 +3,7 @@ package controllers
 import controllers.UserController._
 import controllers.santa.SantaSolver
 import models.Models._
-import models.{SantaLink, SecretSanta}
+import models.{SantaLink, SecretSanta, User}
 import play.api.Logger
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.{JsSuccess, JsError, Json}
@@ -83,17 +83,35 @@ object SantaController extends Controller with MongoController {
   }
 
   /**
-   * Find all santas for the given user.
+   * Find all santas for the current session user.
    *
-   * @param user
    * @return
    */
-  def findSantas(user: String) = Action.async {
-    val userId = 1
-    val query = Json.obj("graph.from" -> userId)
-    val futureSantas = secretsantas.find(query).cursor[SecretSanta].collect[List]()
+  def findSantas = Action.async { request =>
+    val secret = request.session.get("secret")
 
-    futureSantas.map(santas => Ok(Json.toJson(santas)) as JSON)
+    for {
+      optUserId <- getUserIdForSecret(secret)
+      userId = optUserId.get if optUserId.isDefined
+      query = Json.obj("graph.from" -> userId)
+      santas <- secretsantas.find(query).cursor[SecretSanta].collect[List]()
+    } yield Ok(Json.toJson(santas)) as JSON
+  }
+
+  private def getUserIdForSecret(secret: Option[String]): Future[Option[UserId]] = {
+    val futureUser = secret match {
+      case Some(key) =>
+        val query = Json.obj("secret" -> secret);
+        users.find(query).one[User]
+
+      case None =>
+        Future(None)
+    }
+
+    futureUser map {
+      case Some(user) => Some(user._id)
+      case None => None
+    }
   }
 
   /**

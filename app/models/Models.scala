@@ -4,7 +4,8 @@ import models.Models._
 
 case class User(
   _id: UserId,
-  name: String)
+  name: String,
+  secret: String)
 
 case class SecretSanta(
   _id: SantaId = 0,
