@@ -19,7 +19,7 @@ object UserController extends Controller with MongoController {
   }
 
   def viewSecretProfile(key: String) = Action.async {
-    val query = Json.obj("secret" -> key);
+    val query = Json.obj("secret" -> key)
     val futureUser = users.find(query).one[User]
 
     for {

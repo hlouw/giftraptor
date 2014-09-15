@@ -14,6 +14,7 @@ libraryDependencies ++= Seq(
   "org.reactivemongo" %% "play2-reactivemongo" % "0.10.5.akka23-SNAPSHOT",
   // WebJars pull in client-side web libraries
   "org.webjars" %% "webjars-play" % "2.3.0",
+  "org.webjars" % "jquery" % "1.11.1",
   "org.webjars" % "bootstrap" % "3.2.0",
   "org.webjars" % "angularjs" % "1.2.23"
 )
