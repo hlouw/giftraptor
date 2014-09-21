@@ -3,18 +3,16 @@
 # ~~~~
 
 # Pages
-GET         /                                   controllers.Application.index
-GET         /user/:user                         controllers.UserController.viewProfile(user: String)
-GET         /secret/:key                        controllers.UserController.viewSecretProfile(key: String)
-GET         /admin                              controllers.Application.admin
+GET         /                                   controllers.Application.landing
+GET         /user                               controllers.UserController.viewProfile
 
 # Services
-POST        /santa                              controllers.SantaController.create
-GET         /santa/:id                          controllers.SantaController.findById(id: Int)
 GET         /santas                             controllers.SantaController.findSantas
-PUT         /santa/:id/generate                 controllers.SantaController.generate(id: Int)
-PUT         /santa/:id/addmember/:userId        controllers.SantaController.addMember(id: Int, userId: Int)
-PUT         /santa/:id/declique                 controllers.SantaController.declique(id: Int)
+GET         /santa/:id/giftee                   controllers.SantaController.findGiftee(id: Int)
+POST        /santa                              controllers.AdminController.create
+PUT         /santa/:id/generate                 controllers.AdminController.generate(id: Int)
+PUT         /santa/:id/addmember/:userId        controllers.AdminController.addMember(id: Int, userId: Int)
+PUT         /santa/:id/declique                 controllers.AdminController.declique(id: Int)
 
 # Webjars, requirejs, routes and other assets
 GET         /webjars/*file                      controllers.WebJarAssets.at(file)

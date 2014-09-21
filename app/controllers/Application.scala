@@ -5,10 +5,8 @@ import play.api.mvc._
 
 object Application extends Controller {
 
-  def index = Action {
+  def landing = Action {
     Ok(views.html.index())
   }
-
-  def admin = TODO
 
 }
