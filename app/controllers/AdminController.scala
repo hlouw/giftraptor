@@ -1,8 +1,9 @@
 package controllers
 
 import controllers.santa.SantaSolver
-import models.Models._
+import models.SantaModel._
 import models.{SantaLink, SecretSanta}
+import models.UserModel._
 import play.api.libs.json.Json
 import play.api.mvc.{BodyParsers, Action, Controller}
 import play.modules.reactivemongo.MongoController

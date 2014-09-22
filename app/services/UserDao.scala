@@ -8,7 +8,7 @@ import play.api.Play.current
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import scala.concurrent.Future
 
-import models.Models._
+import models.UserModel._
 import models.User
 
 object UserDao {

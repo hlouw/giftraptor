@@ -2,7 +2,8 @@ package controllers.santa
 
 import scala.util.Random
 
-import models.Models.{Path, UserId}
+import models.SantaModel._
+import models.UserModel._
 import scala.concurrent.Future
 
 import play.api.libs.concurrent.Execution.Implicits.defaultContext

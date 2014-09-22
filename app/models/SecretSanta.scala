@@ -1,11 +1,7 @@
 package models
 
-import models.Models._
-
-case class User(
-  _id: UserId,
-  name: String,
-  secret: String)
+import models.SantaModel._
+import models.UserModel._
 
 case class SecretSanta(
   _id: SantaId = 0,
@@ -27,15 +23,13 @@ case class SecretSanta(
 
 case class SantaLink(from: Int, to: Set[UserId])
 
-object Models {
+object SantaModel {
   import play.api.libs.json.Json
 
-  type UserId = Int
   type SantaId = Int
   type Graph = Map[UserId, Set[UserId]]
   type Path = List[UserId]
 
-  implicit val userFormat = Json.format[User]
   implicit val santaLinkFormat = Json.format[SantaLink]
   implicit val secretSantaFormat = Json.format[SecretSanta]
 }

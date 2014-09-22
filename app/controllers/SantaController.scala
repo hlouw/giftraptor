@@ -1,7 +1,7 @@
 package controllers
 
-import models.Models._
-import models.SecretSanta
+import models.SantaModel._
+import models.UserModel._
 import play.api.Logger
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
