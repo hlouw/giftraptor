@@ -4,7 +4,7 @@
 <div class="jumbotron">
     <div class="container">
         <h1>Welcome to Gift Raptor!</h1>
-        <p>This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
+        <p>The smart new base for managing Secret Santas and all other gift giving shenanigans.</p>
         <p><a class="btn btn-primary btn-lg" role="button">Learn more &raquo;</a></p>
     </div>
 </div>
@@ -13,16 +13,30 @@
 
     <div class="row">
         <div class="col-md-4">
-            <h2>Secret Code</h2>
-            <p>If you've received a secret code, you can enter it here to see who your secret gift recipient is.</p>
+            <h2><span class="glyphicon glyphicon-tower"></span>  Smarter Secrets</h2>
+            <p>
+                You like giving presents. So do we. Gift Raptor gives you the gift of a special someone. Someone unique to you,
+                known only to you.
+            </p><p>
+                With the help of science and blindfolds, we can select your target
+                without knowing who it is ourselves.
+            </p>
+        </div>
+        <div class="col-md-4">
+            <h2><span class="glyphicon glyphicon-qrcode"></span>  Secret Code</h2>
+            <p>Please type in the secret code that we have secretly given you in secret, to proceed to further secrets.</p>
             <p>
             <form class="form-inline" name="myForm" ng-controller="AppController">
                 <input type="text" class="form-control" id="messageField" placeholder="Type code here" ng-model="code"/>
                 <a role="button" class="btn btn-success" ng-click="setSessionCode()" ng-href="/user">Enter code &raquo;</a>
             </form>
-            </p>
         </div>
     </div>
+    <hr>
+    <footer>
+        <p>Created by Hentie Louw and Ruth Dixon</p>
+        <p>Icons provided by <a href="http://glyphicons.com">Glyphicons</a></p>
+    </footer>
 
 </div>
 
