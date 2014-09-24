@@ -20,7 +20,6 @@ object UserDao {
   }
 
   def findUserById(userId: UserId): Future[Option[User]] = {
-    Logger.info(s"Finding user: $userId")
     collection.find(Json.obj("_id" -> userId)).one[User]
   }
 

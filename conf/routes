@@ -5,6 +5,7 @@
 # Pages
 GET         /                                   controllers.Application.landing
 GET         /user                               controllers.UserController.viewProfile
+POST        /secret                             controllers.UserController.submitSecret
 
 # Services
 GET         /santas                             controllers.SantaController.findSantas

@@ -1,13 +1,31 @@
-@import "profile.less";
+body {
+  padding-top: 20px;
+  padding-bottom: 20px;
 
-.container {
+  .container {
     box-sizing: border-box;
-    max-width: 1200px;
-}
+    max-width: 1170px;
+    max-height: 330px;
+    height: 330px;
 
-.jumbotron {
-    background: url('/assets/images/Raptor.png') center;
+    .raptor-content {
+      min-height: 600px;
+    }
+
+    footer {
+      font-size: 8pt;
+    }
+  }
+
+  #landing .jumbotron {
+    background: url('/assets/images/Raptor.png') right;
     background-size: auto 330px;
     color: white;
     text-shadow: black 0.1em 0.1em 0.2em;
+  }
+
+  .secret-giftee {
+    font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
+  }
 }
+

@@ -27,8 +27,7 @@ object SantaController extends Controller with MongoController {
    * @return
    */
   def findSantas = Action.async { request =>
-    val secret = request.cookies.get("secret") map { cookie => cookie.value }
-    Logger.info(s"Secret: $secret")
+    val secret = request.session.get("secret")
 
     for {
       optUserId <- getUserIdForSecret(secret)
@@ -44,8 +43,7 @@ object SantaController extends Controller with MongoController {
    * @return
    */
   def findGiftee(santaId: SantaId) = Action.async { request =>
-    val secret = request.cookies.get("secret") map { cookie => cookie.value }
-    Logger.info(s"Find giftee secret: $secret")
+    val secret = request.session.get("secret")
 
     for {
       optUserId <- getUserIdForSecret(secret)

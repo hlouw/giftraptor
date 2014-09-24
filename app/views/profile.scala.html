@@ -1,13 +1,15 @@
 @(user: String)
 
-@main("User Profile") {
+@main("User Profile", "user") {
 
-<div id="user-profile" class="container">
-    <div class="row">
-        <div class="page-header">
-            <h1>Welcome, @user</h1>
-            <p>WE KNOW WHO YOU ARE. Because of that code you just typed.</p>
-        </div>
+<div id="user-profile">
+    <div class="jumbotron">
+        <h1>Hello, @user</h1>
+        <p>
+            You've made it to the inner circle.
+            Below you will find all the Secret Santas you've been signed up for. Click the button to reveal your
+            secret mission!
+        </p>
     </div>
 
     <div class="row" ng-controller="ProfileController as profileCtrl">
@@ -16,7 +18,7 @@
                 <h2>{{santa.name}}</h2>
                 <p>{{santa.description}}</p>
                 <p><button class="btn btn-default" data-toggle="modal" data-target="#modal_{{santa._id}}">
-                    Reveal your target &raquo;
+                    Reveal your mission &raquo;
                 </button></p>
             </div>
 
@@ -25,10 +27,10 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                            <h4 class="modal-title">You shall give unto</h4>
+                            <h4 class="modal-title">You've been assigned</h4>
                         </div>
-                        <div class="modal-body">
-                            <p>{{santaCtrl.giftee}}</p>
+                        <div class="modal-body secret-giftee">
+                            <h4>{{santaCtrl.giftee}}</h4>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Got it!</button>

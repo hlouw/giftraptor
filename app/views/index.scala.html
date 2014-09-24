@@ -1,40 +1,47 @@
-@main("Gift Raptor") {
+@main("Gift Raptor", "landing") {
 
 <!-- Main jumbotron for a primary marketing message or call to action -->
 
-<div class="container">
+<div id="landing">
     <div class="jumbotron hidden-sm hidden-xs">
         <h1>Welcome to Gift Raptor!</h1>
         <p>The smart new base for managing Secret Santas and all other gift giving shenanigans.</p>
-        <p><a class="btn btn-primary btn-lg" role="button">Learn more &raquo;</a></p>
+        <p><a class="btn btn-primary btn-lg" role="button" href="http://en.wikipedia.org/wiki/Velociraptor">Learn more &raquo;</a></p>
     </div>
 
     <div class="row">
         <div class="col-md-4">
+            <h2><span class="glyphicon glyphicon-gift"></span>  Better to Give</h2>
+            <p>
+                You like giving presents. So do we. Gift Raptor gives you the gift of a gift-giving opportunity.
+            </p><p>
+                This is your chance to give a gift to one lucky person, safe in the knowledge that yours is the best
+                secret gift they'll receive this year - your recipient is unique to you!
+            </p>
+        </div>
+        <div class="col-md-4">
             <h2><span class="glyphicon glyphicon-tower"></span>  Smarter Secrets</h2>
             <p>
-                You like giving presents. So do we. Gift Raptor gives you the gift of a special someone. Someone unique to you,
-                known only to you.
-            </p><p>
                 With the help of science and blindfolds, we can select your target
-                without knowing who it is ourselves.
+                without anyone knowing who it is. Not even us!
+            </p>
+            <p>
+                We've also added a bit of magic to ensure that no-one gets their own direct family as beneficiary.
             </p>
         </div>
         <div class="col-md-4">
             <h2><span class="glyphicon glyphicon-qrcode"></span>  Secret Code</h2>
-            <p>Please type in the secret code that we have secretly given you in secret, to proceed to further secrets.</p>
+            <p>No need to register! Just type in the secret code that we have secretly given you in secret, to proceed to further secrets.</p>
             <p>
-            <form class="form-inline" name="myForm" ng-controller="AppController">
-                <input type="text" class="form-control" id="messageField" placeholder="Type code here" ng-model="code"/>
-                <a role="button" class="btn btn-success" ng-click="setSessionCode()" ng-href="/user">Enter code &raquo;</a>
+            <form class="form-inline" name="myForm" action="/secret" method="POST">
+                <div class="form-group">
+                    <label class="sr-only" for="inputCode">Code</label>
+                    <input name="code" id="inputCode" type="text" class="form-control" id="messageField" placeholder="Type code here" ng-model="code"/>
+                </div>
+                <button type="submit" class="btn btn-success">Enter code</button>
             </form>
         </div>
     </div>
-    <hr>
-    <footer>
-        <p>Created by Hentie Louw and Ruth Dixon</p>
-        <p>Icons provided by <a href="http://glyphicons.com">Glyphicons</a></p>
-    </footer>
 
 </div>
 
