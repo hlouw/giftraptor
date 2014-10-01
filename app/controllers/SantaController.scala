@@ -57,11 +57,8 @@ object SantaController extends Controller with MongoController {
 
   private def getUserIdForSecret(secret: Option[String]): Future[Option[UserId]] = {
     val futureUser = secret match {
-      case Some(key) =>
-        UserDao.findUserBySecret(key)
-
-      case None =>
-        Future(None)
+      case Some(key) => UserDao.findUserBySecret(key)
+      case None => Future(None)
     }
 
     futureUser map {

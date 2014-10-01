@@ -1,6 +1,6 @@
 @(user: String)
 
-@main("User Profile", "user") {
+@main("My Secrets", "user") {
 
 <div id="user-profile">
     <div class="jumbotron">
@@ -14,12 +14,18 @@
 
     <div class="row" ng-controller="ProfileController as profileCtrl">
         <div class="col-md-4" ng-repeat="santa in profileCtrl.santas" ng-controller="SantaViewController as santaCtrl">
-            <div class="santa-tile">
-                <h2>{{santa.name}}</h2>
-                <p>{{santa.description}}</p>
-                <p><button class="btn btn-default" data-toggle="modal" data-target="#modal_{{santa._id}}">
-                    Reveal your assignment &raquo;
-                </button></p>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{{santa.name}}</h3>
+                </div>
+                <div class="panel-body">
+                    {{santa.description}}
+                </div>
+                <div class="panel-footer">
+                    <button class="btn btn-default" data-toggle="modal" data-target="#modal_{{santa._id}}">
+                        Reveal your assignment
+                    </button>
+                </div>
             </div>
 
             <div class="modal fade" id="modal_{{santa._id}}">
@@ -33,7 +39,7 @@
                             <h4>{{santaCtrl.giftee}}</h4>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Got it!</button>
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Got it!</button>
                         </div>
                     </div><!-- /.modal-content -->
                 </div><!-- /.modal-dialog -->

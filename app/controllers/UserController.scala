@@ -12,6 +12,9 @@ import scala.concurrent.Future
 
 object UserController extends Controller with MongoController {
 
+  val invalid_code = "The code you've entered is invalid. Please try again below."
+  val no_code = "No code was entered. Please enter a code below."
+
   case class SecretCode(code: String)
 
   val codeForm = Form(
@@ -23,14 +26,14 @@ object UserController extends Controller with MongoController {
 
   def submitSecret = Action.async { implicit request =>
     codeForm.bindFromRequest.fold(
-      formWithErrors => Future(BadRequest("Invalid code")),
+      formWithErrors => Future(Ok(views.html.signin(invalid_code))),
       userData => {
         val code = userData.code
         for {
           optUser <- UserDao.findUserBySecret(code)
         } yield optUser match {
           case Some(user) => Redirect(routes.UserController.viewProfile).withSession("secret" -> user.secret)
-          case None => BadRequest(s"Invalid secret").withNewSession
+          case None => Ok(views.html.signin(invalid_code)).withNewSession
         }
       }
     )
@@ -43,10 +46,10 @@ object UserController extends Controller with MongoController {
           optUser <- UserDao.findUserBySecret(secret)
         } yield optUser match {
           case Some(user) => Ok(views.html.profile(user.name)).withSession("secret" -> user.secret)
-          case None => BadRequest(s"Invalid secret code").withNewSession
+          case None => Ok(views.html.signin(invalid_code)).withNewSession
         }
 
-      case None => Future(BadRequest("No secret code entered"))
+      case None => Future(Ok(views.html.signin(no_code)))
     }
 
   }

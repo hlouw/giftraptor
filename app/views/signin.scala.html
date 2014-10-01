@@ -1,0 +1,24 @@
+@(error: String)
+
+@main("Sign In", "user") {
+    <div class="row">
+        <div id="sign-in" class="col-md-4 col-md-offset-4">
+            <div class="alert alert-warning" role="alert" ng-hide="@error.isEmpty">
+                <button type="button" class="close" data-dismiss="alert">
+                    <span aria-hidden="true">×</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                @error
+            </div>
+            <h3>Secret Code</h3>
+            <form class="form-signin" name="myForm" action="/secret" method="POST">
+                <div class="form-group">
+                    <label class="sr-only" for="inputCode">Code</label>
+                    <input name="code" id="inputCode" type="text" class="form-control" id="messageField" placeholder="Type code here" ng-model="code"/>
+                </div>
+                <button type="submit" class="btn btn-primary">Enter code</button>
+            </form>
+
+        </div>
+    </div>
+}
