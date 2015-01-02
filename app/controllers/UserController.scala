@@ -1,16 +1,14 @@
 package controllers
 
-import play.api.Logger
-import play.api.data._
 import play.api.data.Forms._
+import play.api.data._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc.{Action, Controller}
-import play.modules.reactivemongo.MongoController
 import services.UserDao
 
 import scala.concurrent.Future
 
-object UserController extends Controller with MongoController {
+object UserController extends Controller {
 
   val invalid_code = "The code you've entered is invalid. Please try again below."
   val no_code = "No code was entered. Please enter a code below."

@@ -1,12 +1,12 @@
 package services
 
-import controllers.SantaController._
-import play.modules.reactivemongo.ReactiveMongoPlugin
-import play.modules.reactivemongo.json.collection.JSONCollection
-import reactivemongo.bson.{BSONInteger, BSONDocument}
-import reactivemongo.core.commands.{Update, FindAndModify}
 import play.api.Play.current
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import play.modules.reactivemongo.ReactiveMongoPlugin
+import play.modules.reactivemongo.json.collection.JSONCollection
+import reactivemongo.bson.{BSONDocument, BSONInteger}
+import reactivemongo.core.commands.{FindAndModify, Update}
+
 import scala.concurrent.Future
 
 object CountersDao {
@@ -29,7 +29,7 @@ object CountersDao {
       modify = Update(update, true),
       upsert = true)
 
-    db.command(command) map { maybeDoc =>
+    ReactiveMongoPlugin.db.command(command) map { maybeDoc =>
       for {
         doc <- maybeDoc
         seq <- doc.getAs[Int]("seq")

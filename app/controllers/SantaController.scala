@@ -2,12 +2,9 @@ package controllers
 
 import models.SantaModel._
 import models.UserModel._
-import play.api.Logger
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.Json
 import play.api.mvc._
-import play.modules.reactivemongo.MongoController
-import play.modules.reactivemongo.json.collection.JSONCollection
 import services.{SantaDao, UserDao}
 
 import scala.concurrent.Future
@@ -15,10 +12,7 @@ import scala.concurrent.Future
 /**
  *
  */
-object SantaController extends Controller with MongoController {
-
-  def secretsantas = db.collection[JSONCollection]("secretsantas")
-  def users = db.collection[JSONCollection]("users")
+object SantaController extends Controller {
 
 
   /**
